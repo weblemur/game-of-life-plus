@@ -16,24 +16,38 @@ function fetchAndInstantiate(url, importObject) {
 */
 
 function main() {
-    let width = 500;
-    let height = 500;
-    //let ctx = draw();
+    let width = 100;
+    let height = 100;
     let game = new GameOfLife(width, height);
     game.randomFill();
     draw(game);
 }
 
 function draw(game) {
-    var canvas = document.getElementById('board');
-    var ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'green';
-    for (let x = 0; x < game._width; x++) {
-        for (let y = 0; y < game._height; y++) {
-            if (game.getCellState(x, y))
-                ctx.fillRect(x, y, 1, 1);
-        }
+    let canvas = document.getElementById('board');
+    let ctx = canvas.getContext('2d');
+    let canvasWidth = 500;
+    let canvasHeight = 500;
+    let imageData = ctx.createImageData(game._width, game._height);
+    for (let i = 0; i < game._board.length; i++) {
+        // co
+        if (game._board[i]) imageData.data[i*4 + 3] = 255;
     }
+
+    console.log(imageData);
+
+    // disable smoothing on scaling
+    ctx.imageSmoothingEnabled = false;
+    ctx.mozImageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+    ctx.msImageSmoothingEnabled = false;
+
+
+    // create, scale, and draw image
+    createImageBitmap(imageData)
+    .then(img => {
+        ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+    });
 }
 
 class GameOfLife {
