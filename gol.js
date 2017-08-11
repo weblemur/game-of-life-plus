@@ -28,9 +28,8 @@ function main() {
         let x = Math.floor(e.offsetX * width / game.canvasWidth);
         let y = Math.floor(e.offsetY * height / game.canvasHeight);
         let index = game.getIndex(x, y);
-        console.log(index);
         game._board[index] = game.getCellState(x, y) ? 0 : 1;
-        // game.draw();
+        // game.step();
     });
     // game.step();
     game.step();
@@ -41,11 +40,14 @@ function main() {
 class GameOfLife {
 
     draw() {
-
         let ctx = this.ctx;
         let imageData = this.imageData;
         for (let i = 0; i < this._board.length; i++) {
-            if (this._board[i]) imageData.data[i * 4 + 3] = 255;
+            if (this._board[i]) {
+                imageData.data[i * 4 + 3] = 255;
+            } else {
+                imageData.data[i * 4 + 3] = 0;
+            }
         }
 
         // disable smoothing on scaling
@@ -89,7 +91,7 @@ class GameOfLife {
     step() {
         this.draw();
         this.updateCells();
-        requestAnimationFrame(this.step.bind(this));
+        // requestAnimationFrame(this.step.bind(this));
     }
 
     updateCells() {
