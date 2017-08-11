@@ -29,11 +29,8 @@ function main() {
         let y = Math.floor(e.offsetY * height / game.canvasHeight);
         let index = game.getIndex(x, y);
         game._board[index] = game.getCellState(x, y) ? 0 : 1;
-        // game.step();
     });
-    // game.step();
     game.step();
-    // console.log(game._board);
 }
 
 
@@ -95,7 +92,7 @@ class GameOfLife {
     step() {
         this.draw();
         this.updateCells();
-        // requestAnimationFrame(this.step.bind(this));
+        requestAnimationFrame(this.step.bind(this));
     }
 
     updateCells() {
