@@ -25,14 +25,16 @@ function main() {
     outergame = game;
     game.randomFill();
     document.getElementById('board').addEventListener('click', e => {
-        let x = Math.floor(e.offsetX / 5);
-        let y = Math.floor(e.offsetY / 5);
+        let x = Math.floor(e.offsetX * width / game.canvasWidth);
+        let y = Math.floor(e.offsetY * height / game.canvasHeight);
         let index = game.getIndex(x, y);
+        console.log(index);
         game._board[index] = game.getCellState(x, y) ? 0 : 1;
+        // game.draw();
     });
-    //game.step();
+    // game.step();
     game.step();
-    //draw(game);
+    // console.log(game._board);
 }
 
 
