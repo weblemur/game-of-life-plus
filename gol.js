@@ -24,16 +24,19 @@ function main() {
     let game = new GameOfLife(width, height);
     outergame = game;
     game.randomFill();
-    //game.step();
+    document.getElementById('board').addEventListener('click', e => {
+        let x = Math.floor(e.offsetX * width / game.canvasWidth);
+        let y = Math.floor(e.offsetY * height / game.canvasHeight);
+        let index = game.getIndex(x, y);
+        game._board[index] = game.getCellState(x, y) ? 0 : 1;
+    });
     game.step();
-    //draw(game);
 }
 
 
 class GameOfLife {
 
     draw() {
-
         let ctx = this.ctx;
         let imageData = this.imageData;
         let data = imageData.data;
@@ -61,8 +64,6 @@ class GameOfLife {
                 ctx.drawImage(img, 0, 0, this.canvasWidth, this.canvasHeight);
             });
     }
-
-
 
     constructor(width, height) {
 
