@@ -18,8 +18,8 @@ let outergame;
 
 function main() {
 
-    let width = 20;
-    let height = 20;
+    let width = 100;
+    let height = 100;
     //let ctx = draw();
     let game = new GameOfLife(width, height);
     outergame = game;
@@ -36,8 +36,16 @@ class GameOfLife {
 
         let ctx = this.ctx;
         let imageData = this.imageData;
+        let data = imageData.data;
         for (let i = 0; i < this._board.length; i++) {
-            if (this._board[i]) imageData.data[i * 4 + 3] = 255;
+            if (this._board[i]) {
+                // data[i * 4] = 0; // red
+                // data[i * 4 + 1] = 0; // green
+                // data[i * 4 + 2] = 0; // blue
+                data[i * 4 + 3] = 255; // alpha
+            } else {
+                data[i * 4 + 3] = 0; // alpha
+            }
         }
 
         // disable smoothing on scaling
@@ -103,7 +111,7 @@ class GameOfLife {
         let aliveNeighbors = this.getAliveNeighbors(x, y);
         // console.log('aliveneighbors:', aliveNeighbors, 'x, y: ', x, y);
 
-        if (this.getCellState(x, y)) {
+        if (this.getCellState(x, y) > 0) {
             if (aliveNeighbors < 2) {
                 this._nextBoard[this.getIndex(x, y)] = 0;
             }
@@ -116,6 +124,8 @@ class GameOfLife {
         } else {
             if (aliveNeighbors === 3) {
                 this._nextBoard[this.getIndex(x, y)] = 1;
+            } else {
+                this._nextBoard[this.getIndex(x, y)] = 0;
             }
         }
     }
@@ -140,9 +150,9 @@ class GameOfLife {
 
         for (let i = 0; i < offsetsArray.length; i++) {
             // compute neighbor coordinates
-            var offset = offsetsArray[i] // current offset
-            var neighborX = x + offset[0];
-            var neighborY = y + offset[1];
+            let offset = offsetsArray[i] // current offset
+            let neighborX = x + offset[0];
+            let neighborY = y + offset[1];
 
             // Periodic boundary conditions
             if (neighborX < 0) neighborX = this._width - 1;
