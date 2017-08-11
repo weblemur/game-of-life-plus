@@ -21,6 +21,13 @@ function main() {
     let game = new GameOfLife(width, height);
     game.randomFill();
     draw(game);
+    document.getElementById('board').addEventListener('click', e => {
+        let x = Math.floor(e.offsetX / 5);
+        let y = Math.floor(e.offsetY / 5);
+        let index = game.getIndex(x, y);
+        game._board[index] = game.getCellState(x, y) ? 0 : 1;
+        draw(game);
+    });
 }
 
 function draw(game) {
@@ -46,6 +53,7 @@ function draw(game) {
     // create, scale, and draw image
     createImageBitmap(imageData)
     .then(img => {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
     });
 }
@@ -120,7 +128,7 @@ class GameOfLife {
 
     randomFill() {
         for (let i = 0; i < this._board.length; i++) {
-            if (Math.random() < 1)
+            if (Math.random() < 0.2)
                 this._board[i] = 1;
             else
                 this[i] = 0;
