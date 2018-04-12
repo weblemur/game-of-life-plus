@@ -44,8 +44,8 @@ class GameOfLife {
         this._width = width;
         this._height = height;
 
-        this.canvasWidth = 500;
-        this.canvasHeight = 500;
+        this.canvasWidth = 1000;
+        this.canvasHeight = 1000;
 
         this._board = new Uint8Array(width * height);
         this._nextBoard = new Uint8Array(width * height);
@@ -77,24 +77,12 @@ class GameOfLife {
     }
 
     setNextState(x, y) {
+        const a = this.getAliveNeighbors(x, y);
+        const i = this.getIndex(x, y);
 
-        let aliveNeighbors = this.getAliveNeighbors(x, y);
-
-        if (this.getCellState(x, y) > 0) {
-            if (aliveNeighbors < 2) {
-                this._nextBoard[this.getIndex(x, y)] = 0;
-            }
-            if (aliveNeighbors === 2 || aliveNeighbors === 3) {
-                this._nextBoard[this.getIndex(x, y)] = 1;
-            }
-            if (aliveNeighbors > 3) {
-                this._nextBoard[this.getIndex(x, y)] = 0;
-            }
-        } else if (aliveNeighbors === 3) {
-                this._nextBoard[this.getIndex(x, y)] = 1;
-            } else {
-                this._nextBoard[this.getIndex(x, y)] = 0;
-            }
+        if (a === 2) this._nextBoard[i] = this._board[i];
+        else if (a === 3) this._nextBoard[i] = 1;
+        else this._nextBoard[i] = 0;
     }
 
 
@@ -107,7 +95,7 @@ class GameOfLife {
 
         for (let i = 0; i < this._offsetsArray.length; i++) {
             // compute neighbor coordinates
-            let offset = this._offsetsArray[i]; // current offset
+            const offset = this._offsetsArray[i]; // current offset
             let neighborX = x + offset[0];
             let neighborY = y + offset[1];
 
@@ -119,8 +107,7 @@ class GameOfLife {
 
             if (neighborX >= 0 && neighborX < this._width) {
                 if (neighborY >= 0 && neighborY < this._height) {
-                    var state = this.getCellState(neighborX, neighborY);
-                    if (state) {
+                    if (this.getCellState(neighborX, neighborY)) {
                         aliveNeighbors++;
                     }
                 }
@@ -142,14 +129,14 @@ class GameOfLife {
 
 function main() {
 
-    let width = 500;
-    let height = 500;
-    let game = new GameOfLife(width, height);
+    const width = 500;
+    const height = 500;
+    const game = new GameOfLife(width, height);
     game.randomFill();
     document.getElementById('board').addEventListener('click', e => {
-        let x = Math.floor(e.offsetX * width / game.canvasWidth);
-        let y = Math.floor(e.offsetY * height / game.canvasHeight);
-        let index = game.getIndex(x, y);
+        const x = Math.floor(e.offsetX * width / game.canvasWidth);
+        const y = Math.floor(e.offsetY * height / game.canvasHeight);
+        const index = game.getIndex(x, y);
         game._board[index] = game.getCellState(x, y) ? 0 : 1;
     });
     game.step();
