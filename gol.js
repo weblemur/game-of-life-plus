@@ -30,6 +30,16 @@ class GameOfLife {
     }
 
     constructor(width, height) {
+        this._offsetsArray = [
+            [-1, -1],
+            [0, -1],
+            [1, -1],
+            [-1, 0],
+            [1, 0],
+            [-1, 1],
+            [0, 1],
+            [1, 1]
+        ];
 
         this._width = width;
         this._height = height;
@@ -94,20 +104,10 @@ class GameOfLife {
 
     getAliveNeighbors(x, y) {
         let aliveNeighbors = 0;
-        const offsetsArray = [
-            [-1, -1],
-            [0, -1],
-            [1, -1],
-            [-1, 0],
-            [1, 0],
-            [-1, 1],
-            [0, 1],
-            [1, 1]
-        ];
 
-        for (let i = 0; i < offsetsArray.length; i++) {
+        for (let i = 0; i < this._offsetsArray.length; i++) {
             // compute neighbor coordinates
-            let offset = offsetsArray[i]; // current offset
+            let offset = this._offsetsArray[i]; // current offset
             let neighborX = x + offset[0];
             let neighborY = y + offset[1];
 
