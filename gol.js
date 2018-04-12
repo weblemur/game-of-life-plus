@@ -1,39 +1,3 @@
-/*
-fetchAndInstantiate('main.wasm').then(function(instance) {
-    console.log(instance.exports.add(17, 25)); // "3"
-});
-
-// fetchAndInstantiate() found in wasm-utils.js
-function fetchAndInstantiate(url, importObject) {
-    return fetch(url).then(response =>
-        response.arrayBuffer()
-    ).then(bytes =>
-        WebAssembly.instantiate(bytes, importObject)
-    ).then(results =>
-        results.instance
-    );
-}
-*/
-let outergame;
-
-function main() {
-
-    let width = 100;
-    let height = 100;
-    //let ctx = draw();
-    let game = new GameOfLife(width, height);
-    outergame = game;
-    game.randomFill();
-    document.getElementById('board').addEventListener('click', e => {
-        let x = Math.floor(e.offsetX * width / game.canvasWidth);
-        let y = Math.floor(e.offsetY * height / game.canvasHeight);
-        let index = game.getIndex(x, y);
-        game._board[index] = game.getCellState(x, y) ? 0 : 1;
-    });
-    game.step();
-}
-
-
 class GameOfLife {
 
     draw() {
@@ -84,10 +48,6 @@ class GameOfLife {
         return this._board[this.getIndex(x, y)];
     }
 
-    swap(x) {
-        return x
-    };
-
     /* Main loop */
     step() {
         this.draw();
@@ -104,13 +64,11 @@ class GameOfLife {
         let temp = this._board;
         this._board = this._nextBoard;
         this._nextBoard = temp;
-        // this._board = this.swap(this._board, this._board = this._nextBoard);
     }
 
     setNextState(x, y) {
 
         let aliveNeighbors = this.getAliveNeighbors(x, y);
-        // console.log('aliveneighbors:', aliveNeighbors, 'x, y: ', x, y);
 
         if (this.getCellState(x, y) > 0) {
             if (aliveNeighbors < 2) {
@@ -122,13 +80,11 @@ class GameOfLife {
             if (aliveNeighbors > 3) {
                 this._nextBoard[this.getIndex(x, y)] = 0;
             }
-        } else {
-            if (aliveNeighbors === 3) {
+        } else if (aliveNeighbors === 3) {
                 this._nextBoard[this.getIndex(x, y)] = 1;
             } else {
                 this._nextBoard[this.getIndex(x, y)] = 0;
             }
-        }
     }
 
 
@@ -151,7 +107,7 @@ class GameOfLife {
 
         for (let i = 0; i < offsetsArray.length; i++) {
             // compute neighbor coordinates
-            let offset = offsetsArray[i] // current offset
+            let offset = offsetsArray[i]; // current offset
             let neighborX = x + offset[0];
             let neighborY = y + offset[1];
 
@@ -177,17 +133,27 @@ class GameOfLife {
 
     randomFill() {
         for (let i = 0; i < this._board.length; i++) {
-            if (Math.random() < Math.random() * 0.2)
-                this._board[i] = 1;
-            else
-                this[i] = 0;
+            if (Math.random() < Math.random() * 0.2) this._board[i] = 1;
+            else this[i] = 0;
         }
     }
 
-    run() {
-
-    }
-
 }
+
+function main() {
+
+    let width = 500;
+    let height = 500;
+    let game = new GameOfLife(width, height);
+    game.randomFill();
+    document.getElementById('board').addEventListener('click', e => {
+        let x = Math.floor(e.offsetX * width / game.canvasWidth);
+        let y = Math.floor(e.offsetY * height / game.canvasHeight);
+        let index = game.getIndex(x, y);
+        game._board[index] = game.getCellState(x, y) ? 0 : 1;
+    });
+    game.step();
+}
+
 
 document.onload = main();
