@@ -44,7 +44,7 @@ class GameOfLife {
         this._width = width;
         this._height = height;
 
-        this.canvasWidth = 1000;
+        this.canvasWidth = 1200;
         this.canvasHeight = 1000;
 
         this._board = new Uint8Array(width * height);
@@ -129,7 +129,7 @@ class GameOfLife {
 
 function main() {
 
-    const width = 500;
+    const width = 600;
     const height = 500;
     const game = new GameOfLife(width, height);
     game.randomFill();
